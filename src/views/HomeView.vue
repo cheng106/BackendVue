@@ -85,6 +85,13 @@
 
       <el-main>
 
+        <div style="margin-bottom: 30px">
+          <el-breadcrumb separator="/">
+            <el-breadcrumb-item :to="{path:'/'}">首頁</el-breadcrumb-item>
+            <el-breadcrumb-item>使用者管理</el-breadcrumb-item>
+          </el-breadcrumb>
+        </div>
+
         <div style="padding: 10px 0">
           <el-input style="width: 200px" placeholder="請輸入名稱" suffix-icon="el-icon-search" class="ml-5"></el-input>
           <el-input style="width: 200px" placeholder="請輸入Email" suffix-icon="el-icon-message" class="ml-5"></el-input>
