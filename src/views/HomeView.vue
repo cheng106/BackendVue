@@ -84,14 +84,48 @@
       </el-header>
 
       <el-main>
-        <el-table :data="tableData">
+
+        <div style="padding: 10px 0">
+          <el-input style="width: 200px" placeholder="請輸入名稱" suffix-icon="el-icon-search" class="ml-5"></el-input>
+          <el-input style="width: 200px" placeholder="請輸入Email" suffix-icon="el-icon-message" class="ml-5"></el-input>
+          <el-input style="width: 200px" placeholder="請輸入地址" suffix-icon="el-icon-position" class="ml-5"></el-input>
+          <el-button class="ml-5" type="primary">搜尋</el-button>
+        </div>
+
+        <div style="margin: 10px 0">
+          <el-button type="primary">新增 <i class="el-icon-circle-plus-outline"></i></el-button>
+          <el-button type="primary">匯入 <i class="el-icon-bottom"></i></el-button>
+          <el-button type="primary">匯出 <i class="el-icon-top"></i></el-button>
+          <el-button type="danger">批次刪除 <i class="el-icon-remove-outline"></i></el-button>
+        </div>
+
+        <el-table :data="tableData" border stripe :header-cell-class-name="headerBg">
           <el-table-column prop="date" label="日期" width="140">
           </el-table-column>
           <el-table-column prop="name" label="姓名" width="120">
           </el-table-column>
           <el-table-column prop="address" label="地址">
           </el-table-column>
+          <el-table-column>
+            <template slot-scope="scope">
+              <el-button type="success">編輯 <i class="el-icon-edit"></i></el-button>
+              <el-button type="danger">刪除 <i class="el-icon-remove-outline"></i></el-button>
+            </template>
+          </el-table-column>
         </el-table>
+
+        <div style="padding: 10px 0">
+          <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page="currentPage4"
+              :page-sizes="[5, 10, 15, 20]"
+              :page-size="10"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="400">
+          </el-pagination>
+        </div>
+
       </el-main>
     </el-container>
   </el-container>
@@ -114,7 +148,8 @@ export default {
       collapseBtnClass: 'el-icon-s-fold',
       isCollapse: false,
       sideWidth: 200,
-      logoTextShow: true
+      logoTextShow: true,
+      headerBg: 'headerBg'
     }
   },
   methods: {
@@ -134,3 +169,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.headerBg {
+  background: rgba(203, 202, 202, 0.93) !important;
+}
+</style>
