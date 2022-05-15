@@ -8,3 +8,11 @@ spring:
     username: root
     password: e23s5
 
+mybatis-plus:
+  mapper-locations: classpath:mapper/**/*.xml
+  type-aliases-package: com.mark.cheng
+  type-handlers-package: com.mark.cheng.utils
+  configuration:
+    call-setters-on-nulls: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
