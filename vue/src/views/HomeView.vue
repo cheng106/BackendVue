@@ -92,10 +92,11 @@
         </div>
 
         <div style="padding: 10px 0">
-          <el-input style="width: 200px" placeholder="請輸入名稱" suffix-icon="el-icon-search" class="ml-5"></el-input>
-          <el-input style="width: 200px" placeholder="請輸入Email" suffix-icon="el-icon-message" class="ml-5"></el-input>
-          <el-input style="width: 200px" placeholder="請輸入地址" suffix-icon="el-icon-position" class="ml-5"></el-input>
-          <el-button class="ml-5" type="primary">搜尋</el-button>
+          <el-input v-model="username" style="width: 200px" placeholder="請輸入名稱" suffix-icon="el-icon-search"
+                    class="ml-5"></el-input>
+          <!--          <el-input style="width: 200px" placeholder="請輸入Email" suffix-icon="el-icon-message" class="ml-5"></el-input>-->
+          <!--          <el-input style="width: 200px" placeholder="請輸入地址" suffix-icon="el-icon-position" class="ml-5"></el-input>-->
+          <el-button @click="load" class="ml-5" type="primary">搜尋</el-button>
         </div>
 
         <div style="margin: 10px 0">
@@ -106,13 +107,14 @@
         </div>
 
         <el-table :data="tableData" border stripe :header-cell-class-name="headerBg">
-          <el-table-column prop="date" label="日期" width="140">
-          </el-table-column>
-          <el-table-column prop="name" label="姓名" width="120">
-          </el-table-column>
-          <el-table-column prop="address" label="地址">
-          </el-table-column>
-          <el-table-column>
+          <el-table-column prop="id" label="ID" width="50" align="center"></el-table-column>
+          <el-table-column prop="username" label="帳號" width="140" align="center"></el-table-column>
+          <el-table-column prop="nickname" label="暱稱" width="120" align="center"></el-table-column>
+          <el-table-column prop="email" label="信箱" width="120" align="center"></el-table-column>
+          <el-table-column prop="phone" label="電話" width="120" align="center"></el-table-column>
+          <el-table-column prop="address" label="地址" width="120" align="center"></el-table-column>
+          <el-table-column prop="createTime" label="建立時間" width="150" align="center"></el-table-column>
+          <el-table-column label="功能" width="220" align="center">
             <template slot-scope="scope">
               <el-button type="success">編輯 <i class="el-icon-edit"></i></el-button>
               <el-button type="danger">刪除 <i class="el-icon-remove-outline"></i></el-button>
@@ -124,11 +126,11 @@
           <el-pagination
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
-              :current-page="currentPage4"
+              :current-page="pageNum"
               :page-sizes="[5, 10, 15, 20]"
-              :page-size="10"
+              :page-size="pageSize"
               layout="total, sizes, prev, pager, next, jumper"
-              :total="400">
+              :total="total">
           </el-pagination>
         </div>
 
@@ -143,34 +145,59 @@ export default {
   name: 'HomeView',
 
   data() {
-    const item = {
-      date: '2022-05-02',
-      name: '小名',
-      address: '台北市民權西路213巷'
-    };
     return {
-      tableData: Array(10).fill(item),
-      msg: "Hello World",
+      tableData: [],
+      total: 0,
+      pageNum: 1,
+      pageSize: 10,
+      // 透過v-model綁定
+      username: '',
       collapseBtnClass: 'el-icon-s-fold',
       isCollapse: false,
-      sideWidth: 200,
+      sideWidth: '200px',
       logoTextShow: true,
       headerBg: 'headerBg'
     }
+  },
+  created() {
+    this.load()
   },
   methods: {
     // 點收縮按鈕觸發
     collapse() {
       this.isCollapse = !this.isCollapse;
       if (this.isCollapse) {
-        this.sideWidth = 64
+        this.sideWidth = '64px'
         this.collapseBtnClass = 'el-icon-s-unfold'
         this.logoTextShow = false
       } else {
-        this.sideWidth = 200
+        this.sideWidth = '200px'
         this.collapseBtnClass = 'el-icon-s-fold'
         this.logoTextShow = true
       }
+    },
+    load() {
+      // 請求分頁查詢
+      fetch("http://localhost:9090/user/page?" +
+          "pageNum=" + this.pageNum +
+          "&pageSize=" + this.pageSize +
+          "&username=" + this.username)
+          .then(res => res.json())
+          .then(res => {
+            console.log(res)
+            this.tableData = res.users;
+            this.total = res.total;
+          })
+    },
+    handleSizeChange(pageSize) {
+      console.log('pageSize:', pageSize)
+      this.pageSize = pageSize
+      this.load()
+    },
+    handleCurrentChange(pageNum) {
+      console.log('pageNum:', pageNum)
+      this.pageNum = pageNum
+      this.load()
     }
   }
 }
