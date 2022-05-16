@@ -16,3 +16,5 @@ mybatis-plus:
     call-setters-on-nulls: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
+swagger:
+  enabled: true
