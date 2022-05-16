@@ -185,7 +185,7 @@ export default {
           .then(res => res.json())
           .then(res => {
             console.log(res)
-            this.tableData = res.users;
+            this.tableData = res.records;
             this.total = res.total;
           })
     },
