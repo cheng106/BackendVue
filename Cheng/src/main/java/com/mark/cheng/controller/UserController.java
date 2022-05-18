@@ -58,10 +58,14 @@ public class UserController {
     @ApiOperation("使用者管理-分頁查詢")
     public IPage<User> findPage(@RequestParam Integer pageNum,
                                 @RequestParam Integer pageSize,
-                                @RequestParam String username) {
+                                @RequestParam String username,
+                                @RequestParam String nickname,
+                                @RequestParam String email) {
         IPage<User> page = new Page<>(pageNum, pageSize);
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<User>()
-                .like(User::getUsername, username);
+                .like(User::getUsername, username)
+                .like(User::getNickname, nickname)
+                .like(User::getEmail, email);
         return userService.page(page, wrapper);
     }
 }

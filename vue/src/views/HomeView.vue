@@ -94,8 +94,10 @@
         <div style="padding: 10px 0">
           <el-input v-model="username" style="width: 200px" placeholder="請輸入名稱" suffix-icon="el-icon-search"
                     class="ml-5"></el-input>
-          <!--          <el-input style="width: 200px" placeholder="請輸入Email" suffix-icon="el-icon-message" class="ml-5"></el-input>-->
-          <!--          <el-input style="width: 200px" placeholder="請輸入地址" suffix-icon="el-icon-position" class="ml-5"></el-input>-->
+          <el-input v-model="email" style="width: 200px" placeholder="請輸入Email" suffix-icon="el-icon-message"
+                    class="ml-5"></el-input>
+          <el-input v-model="nickname" style="width: 200px" placeholder="請輸入暱稱" suffix-icon="el-icon-position"
+                    class="ml-5"></el-input>
           <el-button @click="load" class="ml-5" type="primary">搜尋</el-button>
         </div>
 
@@ -141,6 +143,8 @@
 
 <script>
 
+import request from "@/utils/request";
+
 export default {
   name: 'HomeView',
 
@@ -152,6 +156,8 @@ export default {
       pageSize: 10,
       // 透過v-model綁定
       username: '',
+      email: '',
+      nickname: '',
       collapseBtnClass: 'el-icon-s-fold',
       isCollapse: false,
       sideWidth: '200px',
@@ -178,16 +184,32 @@ export default {
     },
     load() {
       // 請求分頁查詢
-      fetch("http://localhost:9090/user/page?" +
-          "pageNum=" + this.pageNum +
-          "&pageSize=" + this.pageSize +
-          "&username=" + this.username)
-          .then(res => res.json())
-          .then(res => {
-            console.log(res)
-            this.tableData = res.records;
-            this.total = res.total;
-          })
+      request.get("http://localhost:9090/user/page", {
+        params: {
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+          username: this.username,
+          nickname: this.nickname,
+          email: this.email,
+        }
+      }).then(res => {
+        console.log(res)
+        this.tableData = res.records;
+        this.total = res.total;
+      })
+
+      // fetch("http://localhost:9090/user/page?" +
+      //     "pageNum=" + this.pageNum +
+      //     "&pageSize=" + this.pageSize +
+      //     "&username=" + this.username +
+      //     "&email=" + this.email +
+      //     "&nickname=" + this.nickname)
+      //     .then(res => res.json())
+      //     .then(res => {
+      //       console.log(res)
+      //       this.tableData = res.records;
+      //       this.total = res.total;
+      //     })
     },
     handleSizeChange(pageSize) {
       console.log('pageSize:', pageSize)
