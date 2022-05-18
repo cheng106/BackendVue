@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const request = axios.create({
-    baseURL: '/api',  // 此為統一加上前綴[/api]，也就是說所有的api都會有[/api]前綴，在頁面中寫api的時候就不要加[/api]了
+    baseURL: 'http://localhost:9090',  // 此為統一加上前綴，如果是[/api]，也就是說所有的api都會有[/api]前綴，在頁面中寫api的時候就不要加[/api]了
     // ，否則會出現兩次[/api]，例如:[/api/api/user]這樣就會出錯了！！！
     timeout: 5000
 })

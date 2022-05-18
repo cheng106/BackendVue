@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author cheng
  * @since 2022/5/14 23:36
@@ -35,6 +37,11 @@ public class UserController {
     @ApiOperation("刪除使用者")
     public boolean delete(@PathVariable Integer id) {
         return userService.removeById(id);
+    }
+
+    @PostMapping("/del/batch")
+    public boolean deleteBatch(@RequestBody List<Integer> ids) {
+        return userService.removeByIds(ids);
     }
 
     // 使用Mybatis自己實做分頁的寫法
@@ -65,7 +72,8 @@ public class UserController {
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<User>()
                 .like(User::getUsername, username)
                 .like(User::getNickname, nickname)
-                .like(User::getEmail, email);
+                .like(User::getEmail, email)
+                .orderByDesc(User::getCreateTime);
         return userService.page(page, wrapper);
     }
 }
