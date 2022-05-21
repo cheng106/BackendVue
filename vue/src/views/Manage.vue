@@ -1,85 +1,12 @@
 <template>
   <el-container style="min-height: 100vh;">
     <el-aside :width="sideWidth" style="background-color: rgb(238, 241, 246); box-shadow: 2px 0 6px rgb(0 21 41 / 35%)">
-      <el-menu :default-openeds="['1', '3']" style="min-height: 100%; overflow-x: hidden"
-               background-color="rgb(48,65,86)"
-               text-color="#fff"
-               active-text-color="#ffd04b"
-               :collapse-transition="false"
-               :collapse="isCollapse"
-      >
-        <div style="height: 60px;line-height: 60px; text-align: center">
-          <img src="../assets/logo.png" alt="" style="width: 20px; position: relative; top: 5px; margin-right: 5px;">
-          <b style="color: #42b983" v-show="logoTextShow">後台管理系統</b>
-        </div>
-        <el-submenu index="1">
-          <template slot="title"><i class="el-icon-message"></i>
-            <span>選單一</span>
-          </template>
-          <el-menu-item-group>
-            <template slot="title">分组一</template>
-            <el-menu-item index="1-1">选项1</el-menu-item>
-            <el-menu-item index="1-2">选项2</el-menu-item>
-          </el-menu-item-group>
-          <el-menu-item-group title="分组2">
-            <el-menu-item index="1-3">选项3</el-menu-item>
-          </el-menu-item-group>
-          <el-submenu index="1-4">
-            <template slot="title">选项4</template>
-            <el-menu-item index="1-4-1">选项4-1</el-menu-item>
-          </el-submenu>
-        </el-submenu>
-        <el-submenu index="2">
-          <template slot="title"><i class="el-icon-menu"></i>
-            <span>選單二</span>
-          </template>
-          <el-menu-item-group>
-            <template slot="title">分组一</template>
-            <el-menu-item index="2-1">选项1</el-menu-item>
-            <el-menu-item index="2-2">选项2</el-menu-item>
-          </el-menu-item-group>
-          <el-menu-item-group title="分组2">
-            <el-menu-item index="2-3">选项3</el-menu-item>
-          </el-menu-item-group>
-          <el-submenu index="2-4">
-            <template slot="title">选项4</template>
-            <el-menu-item index="2-4-1">选项4-1</el-menu-item>
-          </el-submenu>
-        </el-submenu>
-        <el-submenu index="3">
-          <template slot="title"><i class="el-icon-setting"></i>
-            <span>選單三</span>
-          </template>
-          <el-menu-item-group>
-            <template slot="title">分组一</template>
-            <el-menu-item index="3-1">选项1</el-menu-item>
-            <el-menu-item index="3-2">选项2</el-menu-item>
-          </el-menu-item-group>
-          <el-menu-item-group title="分组2">
-            <el-menu-item index="3-3">选项3</el-menu-item>
-          </el-menu-item-group>
-          <el-submenu index="3-4">
-            <template slot="title">选项4</template>
-            <el-menu-item index="3-4-1">选项4-1</el-menu-item>
-          </el-submenu>
-        </el-submenu>
-      </el-menu>
+      <Aside :isCollapse="isCollapse" :logoTextShow="logoTextShow"/>
     </el-aside>
 
     <el-container>
-      <el-header style="font-size: 12px; border-bottom: 1px solid #ccc; line-height: 60px; display: flex">
-        <div style="flex: 1; font-size: 25px">
-          <span :class="collapseBtnClass" style="cursor:pointer" @click="collapse"></span>
-        </div>
-        <el-dropdown style="width: 70px; cursor:pointer">
-          <i class="el-icon-arrow-down" style="margin-left: 5px">
-            <span>王小虎</span>
-          </i>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>個人資訊</el-dropdown-item>
-            <el-dropdown-item>登出</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+      <el-header style="border-bottom: 1px solid #ccc;">
+        <Header :collapseBtnClass="collapseBtnClass" :collapse="collapse"/>
       </el-header>
 
       <el-main>
@@ -191,7 +118,8 @@
 
 <script>
 
-import request from "@/utils/request";
+import Aside from '@/components/Aside';
+import Header from "@/components/Header";
 
 export default {
   name: 'HomeView',
@@ -219,6 +147,10 @@ export default {
   created() {
     this.load()
   },
+  components: {
+    Header,
+    Aside
+  },
   methods: {
     // 點收縮按鈕觸發
     collapse() {
@@ -235,7 +167,7 @@ export default {
     },
     load() {
       // 請求分頁查詢
-      request.get("/user/page", {
+      this.request.get("/user/page", {
         params: {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
@@ -277,7 +209,7 @@ export default {
       this.form = {}
     },
     save() {
-      request.post("/user", this.form)
+      this.request.post("/user", this.form)
           .then(res => {
             if (res) {
               this.$message.success('save success')
@@ -294,7 +226,7 @@ export default {
       this.dialogFormVisible = true;
     },
     handleDelete(id) {
-      request.delete("/user/" + id).then(res => {
+      this.request.delete("/user/" + id).then(res => {
         if (res) {
           this.$message.success('delete success')
           this.load()
@@ -312,7 +244,7 @@ export default {
       // 把物件陣列轉換數字陣列 [{},{},{}] >> [1,2,3]
       let ids = this.multipleSelection.map(v => v.id)
       console.log('ids:', ids)
-      request.post("/user/del/batch", ids).then(res => {
+      this.request.post("/user/del/batch", ids).then(res => {
         if (res) {
           this.$message.success('batch delete success')
           this.load()
