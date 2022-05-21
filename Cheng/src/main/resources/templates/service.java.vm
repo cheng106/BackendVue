@@ -1,0 +1,18 @@
+package ${package.Service};
+
+import ${package.Entity}.${entity};
+import ${superServiceClassPackage};
+
+/**
+ * $!{table.comment} 服務類別
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+#if(${kotlin})
+interface ${entity}Service : ${superServiceClass}<${entity}>
+#else
+public interface ${entity}Service extends ${superServiceClass}<${entity}> {
+
+}
+#end
