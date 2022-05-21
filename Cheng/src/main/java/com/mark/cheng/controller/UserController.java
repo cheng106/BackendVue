@@ -30,7 +30,7 @@ public class UserController {
     @PutMapping
     @ApiOperation("儲存或更新使用者")
     public boolean saveOrUpdateUser(@RequestBody User user) {
-        return userService.saveOrUpdateUser(user);
+        return userService.saveOrUpdate(user);
     }
 
     @DeleteMapping("{id}")
