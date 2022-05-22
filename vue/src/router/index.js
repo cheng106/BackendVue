@@ -7,13 +7,11 @@ const routes = [
     {
         path: '/',
         name: 'Mange',
-        component: () => import('../views/Manage.vue'),
+        component: () => import('@/views/Manage.vue'),
+        redirect: '/home',
         children: [
-            {
-                path: '/',
-                name: 'Mange',
-                component: () => import('../views/Manage.vue')
-            }
+            {path: 'home', name: '首頁', mata: {'a': 'b'}, component: () => import('@/views/Home.vue')},
+            {path: 'user', name: '使用者管理', component: () => import('@/views/User.vue')},
         ]
     },
     {

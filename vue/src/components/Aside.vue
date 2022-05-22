@@ -6,62 +6,31 @@
            active-text-color="#ffd04b"
            :collapse-transition="false"
            :collapse="isCollapse"
+           router
+           @select="handleSelect"
   >
     <div style="height: 60px;line-height: 60px; text-align: center">
       <img src="../assets/logo.png" alt="" style="width: 20px; position: relative; top: 5px; margin-right: 5px;">
       <b style="color: #42b983" v-show="logoTextShow">後台管理系統</b>
     </div>
-    <el-submenu index="1">
-      <template slot="title"><i class="el-icon-message"></i>
-        <span>選單一</span>
+    <el-menu-item index="/">
+      <template slot="title">
+        <i class="el-icon-house"></i>
+        <span slot="title">首頁</span>
       </template>
-      <el-menu-item-group>
-        <template slot="title">分组一</template>
-        <el-menu-item index="1-1">选项1</el-menu-item>
-        <el-menu-item index="1-2">选项2</el-menu-item>
-      </el-menu-item-group>
-      <el-menu-item-group title="分组2">
-        <el-menu-item index="1-3">选项3</el-menu-item>
-      </el-menu-item-group>
-      <el-submenu index="1-4">
-        <template slot="title">选项4</template>
-        <el-menu-item index="1-4-1">选项4-1</el-menu-item>
-      </el-submenu>
-    </el-submenu>
+    </el-menu-item>
+
     <el-submenu index="2">
-      <template slot="title"><i class="el-icon-menu"></i>
-        <span>選單二</span>
+      <template slot="title">
+        <i class="el-icon-menu"></i>
+        <span slot="title">系統管理</span>
       </template>
-      <el-menu-item-group>
-        <template slot="title">分组一</template>
-        <el-menu-item index="2-1">选项1</el-menu-item>
-        <el-menu-item index="2-2">选项2</el-menu-item>
-      </el-menu-item-group>
-      <el-menu-item-group title="分组2">
-        <el-menu-item index="2-3">选项3</el-menu-item>
-      </el-menu-item-group>
-      <el-submenu index="2-4">
-        <template slot="title">选项4</template>
-        <el-menu-item index="2-4-1">选项4-1</el-menu-item>
-      </el-submenu>
+      <el-menu-item index="/user">
+        <i class="el-icon-s-custom"></i>
+        <span slot="title">使用者管理</span>
+      </el-menu-item>
     </el-submenu>
-    <el-submenu index="3">
-      <template slot="title"><i class="el-icon-setting"></i>
-        <span>選單三</span>
-      </template>
-      <el-menu-item-group>
-        <template slot="title">分组一</template>
-        <el-menu-item index="3-1">选项1</el-menu-item>
-        <el-menu-item index="3-2">选项2</el-menu-item>
-      </el-menu-item-group>
-      <el-menu-item-group title="分组2">
-        <el-menu-item index="3-3">选项3</el-menu-item>
-      </el-menu-item-group>
-      <el-submenu index="3-4">
-        <template slot="title">选项4</template>
-        <el-menu-item index="3-4-1">选项4-1</el-menu-item>
-      </el-submenu>
-    </el-submenu>
+
   </el-menu>
 </template>
 
@@ -71,6 +40,13 @@ export default {
   props: {
     isCollapse: Boolean,
     logoTextShow: Boolean,
+  },
+  methods: {
+    handleSelect(index) {
+      console.log("$route", this.$router)
+      console.log('r',this.$router.options.routes)
+      console.log("index", index)
+    },
   }
 }
 </script>

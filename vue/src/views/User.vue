@@ -1,11 +1,5 @@
 <template>
   <div>
-    <div style="margin-bottom: 30px">
-      <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{path:'/'}">首頁</el-breadcrumb-item>
-        <el-breadcrumb-item>使用者管理</el-breadcrumb-item>
-      </el-breadcrumb>
-    </div>
 
     <div style="padding: 10px 0">
       <el-input v-model="username" style="width: 200px" placeholder="請輸入名稱" suffix-icon="el-icon-search"
@@ -104,10 +98,114 @@
 
 <script>
 export default {
-  name: "User"
+  name: "User",
+  data() {
+    return {
+      tableData: [],
+      total: 0,
+      pageNum: 1,
+      pageSize: 10,
+      // 透過v-model綁定
+      username: '',
+      email: '',
+      nickname: '',
+      dialogFormVisible: false,
+      form: {},
+      multipleSelection: [],
+      headerBg: 'headerBg'
+    }
+  },
+  created() {
+    this.load();
+  },
+  methods: {
+    load() {
+      // 請求分頁查詢
+      this.request.get("/user/page", {
+        params: {
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+          username: this.username,
+          nickname: this.nickname,
+          email: this.email,
+        }
+      }).then(res => {
+        console.log(res)
+        this.tableData = res.records;
+        this.total = res.total;
+      })
+    },
+    handleSizeChange(pageSize) {
+      console.log('pageSize:', pageSize)
+      this.pageSize = pageSize
+      this.load()
+    },
+    handleCurrentChange(pageNum) {
+      console.log('pageNum:', pageNum)
+      this.pageNum = pageNum
+      this.load()
+    },
+    handleAdd() {
+      this.dialogFormVisible = true;
+      this.form = {}
+    },
+    save() {
+      this.request.post("/user", this.form)
+          .then(res => {
+            if (res) {
+              this.$message.success('save success')
+              this.dialogFormVisible = false;
+              this.load()
+            } else {
+              this.$message.error('save error')
+            }
+          })
+    },
+    handleEdit(row) {
+      console.log('row:', row)
+      this.form = row;
+      this.dialogFormVisible = true;
+    },
+    handleDelete(id) {
+      this.request.delete("/user/" + id).then(res => {
+        if (res) {
+          this.$message.success('delete success')
+          this.load()
+        } else {
+          this.$message.error('delete error')
+        }
+      })
+    },
+    handleSelectionChange(val) {
+      console.log('val:', val)
+      this.multipleSelection = val
+
+    },
+    deleteBatch() {
+      // 把物件陣列轉換數字陣列 [{},{},{}] >> [1,2,3]
+      let ids = this.multipleSelection.map(v => v.id)
+      console.log('ids:', ids)
+      this.request.post("/user/del/batch", ids).then(res => {
+        if (res) {
+          this.$message.success('batch delete success')
+          this.load()
+        } else {
+          this.$message.error('batch delete error')
+        }
+      })
+    },
+    reset() {
+      this.username = '';
+      this.nickname = '';
+      this.email = '';
+      this.load()
+    }
+  },
 }
 </script>
 
 <style scoped>
-
+.headerBg {
+  background: rgba(203, 202, 202, 0.93) !important;
+}
 </style>
