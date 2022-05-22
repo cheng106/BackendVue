@@ -11,9 +11,9 @@
       <i class="el-icon-arrow-down" style="margin-left: 5px">
         <span>王小虎</span>
       </i>
-      <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item>個人資訊</el-dropdown-item>
-        <el-dropdown-item>登出</el-dropdown-item>
+      <el-dropdown-menu style="width: 100px; text-align: center" slot="dropdown">
+        <el-dropdown-item style="font-size: 15px; padding: 5px 0">個人資訊</el-dropdown-item>
+        <el-dropdown-item style="font-size: 15px; padding: 5px 0">登出</el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
   </div>
