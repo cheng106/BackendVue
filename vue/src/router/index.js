@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from '@/store'
 
 Vue.use(VueRouter)
 
@@ -29,5 +30,19 @@ const router = new VueRouter({
     base: process.env.BASE_URL,
     routes
 })
+
+// 當「每一個」路由要進入之前，都會先經過這裡
+/**
+    to: 即將進入的路由。
+    from: 從何處進入的路由。
+**/
+router.beforeEach(((to, from, next) => {
+    // 設定路由名稱，在Header元件中使用
+    localStorage.setItem('currentPathName', to.name)
+    // 觸發Store的資料更新
+    store.commit("setPath")
+    // 讓路由繼續執行
+    next()
+}))
 
 export default router

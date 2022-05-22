@@ -43,8 +43,8 @@ export default {
   },
   methods: {
     handleSelect(index) {
-      console.log("$route", this.$router)
-      console.log('r',this.$router.options.routes)
+      // console.log("$route", this.$router)
+      // console.log('r',this.$router.options.routes)
       console.log("index", index)
     },
   }
