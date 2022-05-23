@@ -14,8 +14,14 @@
 
     <div style="margin: 10px 0">
       <el-button type="primary" @click="handleAdd">新增 <i class="el-icon-circle-plus-outline"></i></el-button>
-      <el-button type="primary">匯入 <i class="el-icon-bottom"></i></el-button>
-      <el-button type="primary">匯出 <i class="el-icon-top"></i></el-button>
+      <el-upload action="http://localhost:9090/user/import"
+                 :show-file-list="false"
+                 accept="xlsx"
+                 :on-success="handleExcelImportSuccess"
+                 style="display: inline-block">
+        <el-button type="primary" class="ml-5">匯入 <i class="el-icon-top"></i></el-button>
+      </el-upload>
+      <el-button type="primary" @click="exportFile" class="ml-5">匯出 <i class="el-icon-bottom"></i></el-button>
       <el-popconfirm
           class="ml-5"
           confirm-button-text='確定'
@@ -180,6 +186,13 @@ export default {
       console.log('val:', val)
       this.multipleSelection = val
 
+    },
+    handleExcelImportSuccess() {
+      this.$message.success('import file success')
+      this.load()
+    },
+    exportFile() {
+      window.open("http://localhost:9090/user/export")
     },
     deleteBatch() {
       // 把物件陣列轉換數字陣列 [{},{},{}] >> [1,2,3]

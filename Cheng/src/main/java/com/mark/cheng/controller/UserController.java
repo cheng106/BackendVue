@@ -1,5 +1,8 @@
 package com.mark.cheng.controller;
 
+import cn.hutool.poi.excel.ExcelReader;
+import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -9,8 +12,15 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -44,23 +54,6 @@ public class UserController {
         return userService.removeByIds(ids);
     }
 
-    // 使用Mybatis自己實做分頁的寫法
-    /*
-      @Deprecated
-//    @GetMapping("page")
-//    public Object findPage(@RequestParam int pageNum,
-//                           @RequestParam int pageSize,
-//                           @RequestParam String username) {
-//        pageNum = (pageNum - 1) * pageSize;
-//        Integer total = userService.selectPageTotal(username);
-//        List<User> users = userService.selectPage(pageNum, pageSize, username);
-//        return new HashMap<String, Object>() {{
-//            put("total", total);
-//            put("users", users);
-//        }};
-//    }
-     */
-
     @GetMapping("page")
     @ApiOperation("使用者管理-分頁查詢")
     public IPage<User> findPage(@RequestParam Integer pageNum,
@@ -75,5 +68,45 @@ public class UserController {
                 .like(User::getEmail, email)
                 .orderByDesc(User::getCreateTime);
         return userService.page(page, wrapper);
+    }
+
+    @GetMapping("/export")
+    public void export(HttpServletResponse response) {
+        List<User> list = userService.list();
+        try (ServletOutputStream out = response.getOutputStream();
+             ExcelWriter writer = ExcelUtil.getWriter(true)) {
+
+            writer.addHeaderAlias("username", "使用者名稱");
+            writer.addHeaderAlias("nickname", "暱稱");
+            writer.addHeaderAlias("gender", "性別");
+            writer.addHeaderAlias("email", "信箱");
+            writer.addHeaderAlias("phone", "手機");
+            writer.addHeaderAlias("address", "地址");
+            writer.addHeaderAlias("createTime", "建立時間");
+
+            writer.write(list, true);
+
+            String fileName = "使用者資訊";
+            response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+            response.setHeader("Content-Disposition", "attachment;filename=" +
+                    URLEncoder.encode(fileName, StandardCharsets.UTF_8.name()) + ".xlsx");
+
+            writer.flush(out, true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @PostMapping("/import")
+    public Boolean importFile(@RequestBody MultipartFile file) {
+        try (ExcelReader reader = ExcelUtil.getReader(file.getInputStream())) {
+            List<User> list = reader.readAll(User.class);
+            log.info("list:{}", list);
+            return userService.saveBatch(list);
+        } catch (IOException e) {
+            log.error("ERR:", e);
+            return false;
+        }
+
     }
 }
