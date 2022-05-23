@@ -22,6 +22,11 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    },
+    {
+        path: '/login',
+        name: 'Login',
+        component: () => import('@/views/Login.vue')
     }
 ]
 
@@ -33,9 +38,9 @@ const router = new VueRouter({
 
 // 當「每一個」路由要進入之前，都會先經過這裡
 /**
-    to: 即將進入的路由。
-    from: 從何處進入的路由。
-**/
+ to: 即將進入的路由。
+ from: 從何處進入的路由。
+ **/
 router.beforeEach(((to, from, next) => {
     // 設定路由名稱，在Header元件中使用
     localStorage.setItem('currentPathName', to.name)

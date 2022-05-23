@@ -1,11 +1,13 @@
 package com.mark.cheng.controller;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.mark.cheng.controller.dto.UserDto;
 import com.mark.cheng.entity.User;
 import com.mark.cheng.service.UserService;
 import io.swagger.annotations.Api;
@@ -35,6 +37,17 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @PostMapping("/login")
+    public boolean login(@RequestBody UserDto userDto) {
+        log.info("user:{}", userDto);
+        String userName = userDto.getUsername();
+        String pwd = userDto.getPassword();
+        if (StrUtil.isAllBlank(userName, pwd)) {
+            return false;
+        }
+        return userService.login(userDto);
+    }
 
     @PostMapping
     @PutMapping

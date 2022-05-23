@@ -13,7 +13,9 @@
       </i>
       <el-dropdown-menu style="width: 100px; text-align: center" slot="dropdown">
         <el-dropdown-item style="font-size: 15px; padding: 5px 0">個人資訊</el-dropdown-item>
-        <el-dropdown-item style="font-size: 15px; padding: 5px 0">登出</el-dropdown-item>
+        <el-dropdown-item style="font-size: 15px; padding: 5px 0">
+          <router-link to="/login" style="text-decoration: none">登出</router-link>
+        </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
   </div>
