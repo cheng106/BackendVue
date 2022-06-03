@@ -9,5 +9,7 @@ import com.mark.cheng.entity.User;
  * @since 2022/5/15 00:25
  **/
 public interface UserService extends IService<User> {
-    boolean login(UserDto userDto);
+    UserDto login(UserDto userDto);
+
+    boolean register(UserDto userDto);
 }

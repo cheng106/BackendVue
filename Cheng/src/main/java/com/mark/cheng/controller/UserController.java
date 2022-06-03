@@ -9,6 +9,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.mark.cheng.controller.dto.UserDto;
 import com.mark.cheng.entity.User;
+import com.mark.cheng.enums.ApiResultStatus;
+import com.mark.cheng.exception.BizException;
+import com.mark.cheng.model.R;
 import com.mark.cheng.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,15 +41,44 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/login")
-    public boolean login(@RequestBody UserDto userDto) {
+    @PostMapping("register")
+    public R register(@RequestBody UserDto userDto) {
+        String userName = userDto.getUsername();
+        String pwd = userDto.getPassword();
+        if (StrUtil.isAllBlank(userName, pwd)) {
+            return R.failed(ApiResultStatus.PARAM_ERROR);
+        }
+        try {
+            boolean result = userService.register(userDto);
+            if (result) {
+                return R.success();
+            } else {
+                return R.failed(ApiResultStatus.ERROR);
+            }
+        } catch (BizException e) {
+            return R.failed(e);
+        }
+    }
+
+    @PostMapping("login")
+    public R login(@RequestBody UserDto userDto) {
         log.info("user:{}", userDto);
         String userName = userDto.getUsername();
         String pwd = userDto.getPassword();
         if (StrUtil.isAllBlank(userName, pwd)) {
-            return false;
+            return R.failed(ApiResultStatus.PARAM_ERROR);
         }
-        return userService.login(userDto);
+        try {
+            UserDto loginUser = userService.login(userDto);
+            if (loginUser != null) {
+                return R.success(loginUser);
+            } else {
+                return R.failed(ApiResultStatus.USER_NOT_FOUND);
+            }
+        } catch (BizException e) {
+            return R.failed(e);
+        }
+
     }
 
     @PostMapping
@@ -60,6 +92,14 @@ public class UserController {
     @ApiOperation("刪除使用者")
     public boolean delete(@PathVariable Integer id) {
         return userService.removeById(id);
+    }
+
+    @GetMapping("username/{name}")
+    @ApiOperation("取得使用者訊息")
+    public R delete(@PathVariable String name) {
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<User>()
+                .eq(User::getUsername, name);
+        return R.success(userService.getOne(wrapper));
     }
 
     @PostMapping("/del/batch")

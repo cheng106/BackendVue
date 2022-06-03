@@ -13,6 +13,7 @@ const routes = [
         children: [
             {path: 'home', name: '首頁', mata: {'a': 'b'}, component: () => import('@/views/Home.vue')},
             {path: 'user', name: '使用者管理', component: () => import('@/views/User.vue')},
+            {path: 'person', name: '使用者個人訊息', component: () => import('@/views/Person.vue')},
         ]
     },
     {
@@ -27,6 +28,11 @@ const routes = [
         path: '/login',
         name: 'Login',
         component: () => import('@/views/Login.vue')
+    },
+    {
+        path: '/register',
+        name: 'Register',
+        component: () => import('@/views/Register.vue')
     }
 ]
 
