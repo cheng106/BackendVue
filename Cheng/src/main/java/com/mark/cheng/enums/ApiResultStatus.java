@@ -10,8 +10,9 @@ public enum ApiResultStatus {
     PARAM_ERROR(2, "參數錯誤"),
     USER_NOT_FOUND(3, "帳號密碼錯誤"),
     USER_EXISTS(4, "此帳號已存在"),
-
-    SYSTEM_ERROR(999, "系統異常: %s"),
+    
+    TOKEN_VALIDATION_FAILED(401, "TOKEN驗證失敗"),
+    SYSTEM_ERROR(500, "系統異常: %s"),
     ;
 
     private final int code;

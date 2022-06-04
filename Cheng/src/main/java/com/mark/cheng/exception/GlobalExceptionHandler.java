@@ -23,15 +23,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({MissingServletRequestParameterException.class, HttpMessageNotReadableException.class,
             UnsatisfiedServletRequestParameterException.class, MethodArgumentTypeMismatchException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public R badRequestException(Exception exception) {
-        return R.failed(ApiResultStatus.PARAM_ERROR, exception.getMessage());
+    public R badRequestException(Exception e) {
+        log.error("###-ERR:{}", e.getMessage(), e);
+        return R.failed(ApiResultStatus.PARAM_ERROR, e.getMessage());
     }
 
     @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public R exception(Throwable throwable) {
-        log.error("系統異常", throwable);
-        return R.failed(ApiResultStatus.SYSTEM_ERROR, throwable.getMessage());
+    public R exception(Throwable t) {
+        log.error("系統異常:{}", t.getMessage(), t);
+        return R.failed(ApiResultStatus.SYSTEM_ERROR, t.getMessage());
 
     }
 }

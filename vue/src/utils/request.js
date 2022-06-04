@@ -1,4 +1,5 @@
 import axios from 'axios'
+import ElementUI from "element-ui";
 
 const request = axios.create({
     baseURL: 'http://localhost:9090',  // 此為統一加上前綴，如果是[/api]，也就是說所有的api都會有[/api]前綴，在頁面中寫api的時候就不要加[/api]了
@@ -9,8 +10,13 @@ const request = axios.create({
 // request 攔截器
 request.interceptors.request.use(config => {
     config.headers['Content-Type'] = 'application/json;charset=utf-8';
-
-    // config.headers['token'] = user.token;  // setting header
+    let user = localStorage.getItem('user');
+    console.log('user: ' + user)
+    if (user) {
+        user = JSON.parse(user);
+        console.log('sss', user)
+        config.headers['token'] = user.token;  // setting header
+    }
     return config
 }, error => {
     return Promise.reject(error)
@@ -25,6 +31,12 @@ request.interceptors.response.use(
         }
         if (typeof res === 'string') {
             res = res ? JSON.parse(res) : res
+        }
+        if (res.code === 401) {
+            ElementUI.Message({
+                message: res.msg,
+                type: 'error'
+            })
         }
         return res;
     },

@@ -9,6 +9,7 @@ import com.mark.cheng.enums.ApiResultStatus;
 import com.mark.cheng.exception.BizException;
 import com.mark.cheng.mapper.UserMapper;
 import com.mark.cheng.service.UserService;
+import com.mark.cheng.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +46,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             User one = getOne(wrapper);
             if (one != null) {
                 BeanUtil.copyProperties(one, userDto, true);
+                // 設定token
+                String token = TokenUtils.getToken(String.valueOf(one.getId()), one.getPassword());
+                userDto.setToken(token);
                 return userDto;
             } else {
                 return null;

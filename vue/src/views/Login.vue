@@ -32,11 +32,11 @@ export default {
       rules: {
         username: [
           {required: true, message: '請輸入帳號', trigger: 'blur'},
-          {min: 3, max: 5, message: '長度錯誤', trigger: 'blur'}
+          {min: 3, max: 15, message: '長度錯誤(3~15字)', trigger: 'blur'}
         ],
         password: [
           {required: true, message: '請輸入密碼', trigger: 'blur'},
-          {min: 3, max: 20, message: '長度錯誤', trigger: 'blur'}
+          {min: 3, max: 20, message: '長度錯誤(3~20字)', trigger: 'blur'}
         ],
       }
     }

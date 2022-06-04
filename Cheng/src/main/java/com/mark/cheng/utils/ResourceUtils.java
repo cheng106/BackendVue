@@ -10,13 +10,13 @@ import java.util.Objects;
  * @author cheng
  * @since 2022/5/30 20:35
  **/
-public class ResourceUtil {
+public class ResourceUtils {
 
 
     public static String getResource(String resource) {
         StringBuilder json = new StringBuilder();
         try (BufferedReader in = new BufferedReader(new InputStreamReader(
-                Objects.requireNonNull(ResourceUtil.class.getClassLoader()
+                Objects.requireNonNull(ResourceUtils.class.getClassLoader()
                         .getResourceAsStream(resource)), StandardCharsets.UTF_8))) {
 
             String str;

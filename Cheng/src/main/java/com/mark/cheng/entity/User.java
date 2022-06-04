@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
  * @since 2022/5/15 00:06
  **/
 @Data
+@ToString
 @TableName("sys_user")
 public class User {
     @TableId(type = IdType.AUTO)
