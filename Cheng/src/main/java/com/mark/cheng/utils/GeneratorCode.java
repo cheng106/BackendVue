@@ -55,24 +55,22 @@ public class GeneratorCode {
 
         /* =====資料庫表格 資訊===== */
         // 設定要產生的表格名稱
-        List<String> tableNames = Arrays.asList("sys_user_authority");
+        List<String> tableNames = Arrays.asList("sys_file");
         // 設定要過濾的表格名稱的前綴字
-        List<String> tablePrefixNames = Arrays.asList("sys_");
+        List<String> tablePrefixNames = Arrays.asList("");
         /* =====資料庫表格 資訊===== */
 
 
         FastAutoGenerator.create(url, username, password)
-                .globalConfig(builder -> {
-                    builder.author(author)
-                            .enableSwagger()
-                            .outputDir(outputDir);
-                })
-                .packageConfig(builder -> {
-                    builder.parent(parentPackageName)
-                            // 會在Controller上面的@RequestMaping第一個路徑名稱
-                            .moduleName("")
-                            .pathInfo(Collections.singletonMap(OutputFile.mapper, outputFile));
-                })
+                .globalConfig(builder ->
+                        builder.author(author)
+                        .enableSwagger()
+                        .outputDir(outputDir))
+                .packageConfig(builder ->
+                        builder.parent(parentPackageName)
+                        // 會在Controller上面的@RequestMaping第一個路徑名稱
+                        .moduleName("")
+                        .pathInfo(Collections.singletonMap(OutputFile.mapper, outputFile)))
                 .strategyConfig(builder -> {
                     // 使用Lombok
                     builder.entityBuilder().enableLombok();

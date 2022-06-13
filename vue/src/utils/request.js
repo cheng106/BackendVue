@@ -10,7 +10,7 @@ const request = axios.create({
 // request 攔截器
 request.interceptors.request.use(config => {
     config.headers['Content-Type'] = 'application/json;charset=utf-8';
-    let user = localStorage.getItem('user');
+    let user = localStorage.getItem('sysUser');
     console.log('user: ' + user)
     if (user) {
         user = JSON.parse(user);

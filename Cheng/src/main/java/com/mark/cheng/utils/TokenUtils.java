@@ -3,7 +3,7 @@ package com.mark.cheng.utils;
 import cn.hutool.core.date.DateUtil;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.mark.cheng.entity.User;
+import com.mark.cheng.entity.SysUser;
 import com.mark.cheng.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -40,7 +40,7 @@ public class TokenUtils {
                 .sign(Algorithm.HMAC256(signature));
     }
 
-    public static User getCurrentUser() {
+    public static SysUser getCurrentUser() {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (requestAttributes == null) {
             log.warn("not found request attribute");

@@ -8,12 +8,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.mark.cheng.controller.dto.UserDto;
-import com.mark.cheng.entity.User;
+import com.mark.cheng.entity.SysUser;
 import com.mark.cheng.enums.ApiResultStatus;
 import com.mark.cheng.exception.BizException;
 import com.mark.cheng.model.R;
 import com.mark.cheng.service.UserService;
-import com.mark.cheng.utils.TokenUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +35,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @Api("使用者功能")
-@RequestMapping("user")
+@RequestMapping("sysUser")
 public class UserController {
 
     @Autowired
@@ -85,8 +84,8 @@ public class UserController {
     @PostMapping
     @PutMapping
     @ApiOperation("儲存或更新使用者")
-    public boolean saveOrUpdateUser(@RequestBody User user) {
-        return userService.saveOrUpdate(user);
+    public boolean saveOrUpdateUser(@RequestBody SysUser sysUser) {
+        return userService.saveOrUpdate(sysUser);
     }
 
     @DeleteMapping("{id}")
@@ -98,8 +97,8 @@ public class UserController {
     @GetMapping("username/{name}")
     @ApiOperation("取得使用者訊息")
     public R delete(@PathVariable String name) {
-        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<User>()
-                .eq(User::getUsername, name);
+        LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<SysUser>()
+                .eq(SysUser::getUsername, name);
         return R.success(userService.getOne(wrapper));
     }
 
@@ -110,23 +109,23 @@ public class UserController {
 
     @GetMapping("page")
     @ApiOperation("使用者管理-分頁查詢")
-    public IPage<User> findPage(@RequestParam Integer pageNum,
-                                @RequestParam Integer pageSize,
-                                @RequestParam String username,
-                                @RequestParam String nickname,
-                                @RequestParam String email) {
-        IPage<User> page = new Page<>(pageNum, pageSize);
-        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<User>()
-                .like(User::getUsername, username)
-                .like(User::getNickname, nickname)
-                .like(User::getEmail, email)
-                .orderByDesc(User::getCreateTime);
+    public IPage<SysUser> findPage(@RequestParam Integer pageNum,
+                                   @RequestParam Integer pageSize,
+                                   @RequestParam String username,
+                                   @RequestParam String nickname,
+                                   @RequestParam String email) {
+        IPage<SysUser> page = new Page<>(pageNum, pageSize);
+        LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<SysUser>()
+                .like(SysUser::getUsername, username)
+                .like(SysUser::getNickname, nickname)
+                .like(SysUser::getEmail, email)
+                .orderByDesc(SysUser::getCreateTime);
         return userService.page(page, wrapper);
     }
 
     @GetMapping("/export")
     public void export(HttpServletResponse response) {
-        List<User> list = userService.list();
+        List<SysUser> list = userService.list();
         try (ServletOutputStream out = response.getOutputStream();
              ExcelWriter writer = ExcelUtil.getWriter(true)) {
 
@@ -154,7 +153,7 @@ public class UserController {
     @PostMapping("/import")
     public Boolean importFile(@RequestBody MultipartFile file) {
         try (ExcelReader reader = ExcelUtil.getReader(file.getInputStream())) {
-            List<User> list = reader.readAll(User.class);
+            List<SysUser> list = reader.readAll(SysUser.class);
             log.info("list:{}", list);
             return userService.saveBatch(list);
         } catch (IOException e) {

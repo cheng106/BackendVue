@@ -27,11 +27,11 @@ export default {
   data() {
     return {
       form: {},
-      user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {}
+      sysUser: localStorage.getItem('sysUser') ? JSON.parse(localStorage.getItem('sysUser')) : {}
     }
   },
   created() {
-    this.request.get('/user/username/' + this.user.username)
+    this.request.get('/sysUser/username/' + this.sysUser.username)
         .then((res) => {
           if (res.code === 200) {
             this.form = res.data
@@ -43,7 +43,7 @@ export default {
   },
   methods: {
     save() {
-      this.request.post("/user", this.form)
+      this.request.post("/sysUser", this.form)
           .then(res => {
             if (res) {
               this.$message.success('save success')

@@ -14,7 +14,7 @@
 
     <div style="margin: 10px 0">
       <el-button type="primary" @click="handleAdd">新增 <i class="el-icon-circle-plus-outline"></i></el-button>
-      <el-upload action="http://localhost:9090/user/import"
+      <el-upload action="http://localhost:9090/sysUser/import"
                  :show-file-list="false"
                  accept="xlsx"
                  :on-success="handleExcelImportSuccess"
@@ -127,7 +127,7 @@ export default {
   methods: {
     load() {
       // 請求分頁查詢
-      this.request.get("/user/page", {
+      this.request.get("/sysUser/page", {
         params: {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
@@ -156,7 +156,7 @@ export default {
       this.form = {}
     },
     save() {
-      this.request.post("/user", this.form)
+      this.request.post("/sysUser", this.form)
           .then(res => {
             if (res) {
               this.$message.success('save success')
@@ -173,7 +173,7 @@ export default {
       this.dialogFormVisible = true;
     },
     handleDelete(id) {
-      this.request.delete("/user/" + id).then(res => {
+      this.request.delete("/sysUser/" + id).then(res => {
         if (res) {
           this.$message.success('delete success')
           this.load()
@@ -192,13 +192,13 @@ export default {
       this.load()
     },
     exportFile() {
-      window.open("http://localhost:9090/user/export")
+      window.open("http://localhost:9090/sysUser/export")
     },
     deleteBatch() {
       // 把物件陣列轉換數字陣列 [{},{},{}] >> [1,2,3]
       let ids = this.multipleSelection.map(v => v.id)
       console.log('ids:', ids)
-      this.request.post("/user/del/batch", ids).then(res => {
+      this.request.post("/sysUser/del/batch", ids).then(res => {
         if (res) {
           this.$message.success('batch delete success')
           this.load()

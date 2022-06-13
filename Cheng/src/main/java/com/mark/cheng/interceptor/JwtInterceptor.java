@@ -3,7 +3,7 @@ package com.mark.cheng.interceptor;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.mark.cheng.entity.User;
+import com.mark.cheng.entity.SysUser;
 import com.mark.cheng.enums.ApiResultStatus;
 import com.mark.cheng.exception.BizException;
 import com.mark.cheng.service.UserService;
@@ -48,13 +48,13 @@ public class JwtInterceptor implements HandlerInterceptor {
             log.error("ERR:{}", e.getMessage(), e);
             throw BizException.create(ApiResultStatus.TOKEN_VALIDATION_FAILED);
         }
-        User user = userService.getById(userId);
-        if (user == null) {
+        SysUser sysUser = userService.getById(userId);
+        if (sysUser == null) {
             throw BizException.create(ApiResultStatus.USER_NOT_FOUND);
         }
 
         // 將使用者密碼簽章後驗證
-        JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getPassword())).build();
+        JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(sysUser.getPassword())).build();
         try {
             jwtVerifier.verify(token);
         } catch (Exception e) {

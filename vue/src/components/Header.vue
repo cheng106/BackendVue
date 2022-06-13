@@ -9,9 +9,9 @@
     </div>
     <el-dropdown style="width: 100px; cursor:pointer; text-align: right">
       <div style="display: inline-block">
-        <img :src="user.avatar" alt=""
+        <img :src="sysUser.avatar" alt=""
              style="width: 30px; border-radius: 50%; position: relative; top: 10px; right: 5px;">
-        <span>{{ user.nickname }}</span><i class="el-icon-arrow-down" style="margin-left: 5px"></i>
+        <span>{{ sysUser.nickname }}</span><i class="el-icon-arrow-down" style="margin-left: 5px"></i>
       </div>
       <el-dropdown-menu style="width: 100px; text-align: center" slot="dropdown">
         <el-dropdown-item style="font-size: 15px; padding: 5px 0">
@@ -40,7 +40,7 @@ export default {
   },
   data() {
     return {
-      user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {}
+      sysUser: localStorage.getItem('sysUser') ? JSON.parse(localStorage.getItem('sysUser')) : {}
     }
   },
   methods: {
@@ -49,7 +49,7 @@ export default {
     // },
     logout() {
       this.$router.push('/login')
-      localStorage.removeItem('user')
+      localStorage.removeItem('sysUser')
       this.$message.success('登出成功')
     }
   },

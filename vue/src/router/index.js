@@ -14,6 +14,7 @@ const routes = [
             {path: 'home', name: '首頁', mata: {'a': 'b'}, component: () => import('@/views/Home.vue')},
             {path: 'user', name: '使用者管理', component: () => import('@/views/User.vue')},
             {path: 'person', name: '使用者個人訊息', component: () => import('@/views/Person.vue')},
+            {path: 'file', name: '文件管理', component: () => import('@/views/File.vue')},
         ]
     },
     {

@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Data
 @ToString
 @TableName("sys_user")
-public class User {
+public class SysUser {
     @TableId(type = IdType.AUTO)
     private Integer id;
     private String username;

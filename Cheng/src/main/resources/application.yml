@@ -18,3 +18,7 @@ mybatis-plus:
 
 swagger:
   enabled: true
+
+files:
+  upload:
+    path: /Users/cheng/VueBackend/

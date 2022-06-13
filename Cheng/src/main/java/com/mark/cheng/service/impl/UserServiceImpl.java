@@ -4,7 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.mark.cheng.controller.dto.UserDto;
-import com.mark.cheng.entity.User;
+import com.mark.cheng.entity.SysUser;
 import com.mark.cheng.enums.ApiResultStatus;
 import com.mark.cheng.exception.BizException;
 import com.mark.cheng.mapper.UserMapper;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
  **/
 @Slf4j
 @Service
-public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements UserService {
 
     @Override
     public UserDto login(UserDto userDto) {
@@ -30,20 +30,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public boolean register(UserDto userDto) {
         UserDto getUserDto = getUserInfo(userDto);
         if (getUserDto == null) {
-            User user = new User();
-            BeanUtil.copyProperties(userDto, user, true);
-            return save(user);
+            SysUser sysUser = new SysUser();
+            BeanUtil.copyProperties(userDto, sysUser, true);
+            return save(sysUser);
         } else {
             throw BizException.create(ApiResultStatus.USER_EXISTS);
         }
     }
 
     private UserDto getUserInfo(UserDto userDto) {
-        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<User>()
-                .eq(User::getUsername, userDto.getUsername())
-                .eq(User::getPassword, userDto.getPassword());
+        LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<SysUser>()
+                .eq(SysUser::getUsername, userDto.getUsername())
+                .eq(SysUser::getPassword, userDto.getPassword());
         try {
-            User one = getOne(wrapper);
+            SysUser one = getOne(wrapper);
             if (one != null) {
                 BeanUtil.copyProperties(one, userDto, true);
                 // 設定token

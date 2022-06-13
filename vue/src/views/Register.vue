@@ -5,18 +5,18 @@
       <div style="margin: 20px 0; text-align: center; font-size: 24px">
         <b>註 冊</b>
       </div>
-      <el-form :model="user" :rules="rules" ref="userForm">
+      <el-form :model="sysUser" :rules="rules" ref="userForm">
         <el-form-item prop="username">
-          <el-input size="medium" style="margin: 10px 0;" prefix-icon="el-icon-user"
-                    v-model="user.username"></el-input>
+          <el-input size="medium" style="margin: 10px 0;" prefix-icon="el-icon-sysUser"
+                    v-model="sysUser.username"></el-input>
         </el-form-item>
         <el-form-item prop="password">
           <el-input size="medium" style="margin: 10px 0;" prefix-icon="el-icon-lock"
-                    v-model="user.password"></el-input>
+                    v-model="sysUser.password"></el-input>
         </el-form-item>
         <el-form-item prop="confirmPassword">
           <el-input size="medium" style="margin: 10px 0;" prefix-icon="el-icon-lock"
-                    v-model="user.confirmPassword"></el-input>
+                    v-model="sysUser.confirmPassword"></el-input>
         </el-form-item>
         <div style="margin: 10px 0; text-align: right">
           <el-button type="primary" size="small" autocomplete="off" @click="login">註冊</el-button>
@@ -32,7 +32,7 @@ export default {
   name: "login",
   data() {
     return {
-      user: {},
+      sysUser: {},
       rules: {
         username: [
           {required: true, message: '請輸入帳號', trigger: 'blur'},
@@ -53,11 +53,11 @@ export default {
     login() {
       this.$refs["userForm"].validate((valid) => {
         if (valid) {
-          if (this.user.password !== this.user.confirmPassword) {
+          if (this.sysUser.password !== this.sysUser.confirmPassword) {
             this.$message.error('兩次輸入密碼不一致')
             return false
           }
-          this.request.post("/user/register", this.user).then(res => {
+          this.request.post("/sysUser/register", this.sysUser).then(res => {
             if (res.code === 200) {
               this.$message.success('註冊成功')
             } else {
