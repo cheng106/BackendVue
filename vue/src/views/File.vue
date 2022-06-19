@@ -1,5 +1,11 @@
 <template>
   <div>
+    <div style="padding: 10px 0">
+      <el-input v-model="name" style="width: 200px" placeholder="請輸入名稱" suffix-icon="el-icon-search"
+                class="ml-5"></el-input>
+      <el-button @click="load" class="ml-5" type="primary">搜尋</el-button>
+      <el-button @click="reset" class="ml-5" type="warning">清除條件</el-button>
+    </div>
     <div style="margin: 10px 0">
       <el-upload action="http://localhost:9090/file/upload"
                  :show-file-list="false"
@@ -142,8 +148,12 @@ export default {
     },
     handleFileUploadSuccess(res) {
       console.log('res', res)
-      this.$message.success('upload file success')
-      this.load()
+      if (res.code === 200) {
+        this.$message.success('upload file success')
+        this.load()
+      } else {
+        this.$message.error(res.msg)
+      }
     },
     deleteBatch() {
       // 把物件陣列轉換數字陣列 [{},{},{}] >> [1,2,3]
@@ -166,7 +176,7 @@ export default {
       window.open(url)
     },
     changeStatus(row) {
-      console.log("row---------",row)
+      console.log("row---------", row)
       this.request.post("/file/update", row).then(res => {
         console.log('res=', res)
         if (res.code === 200) {

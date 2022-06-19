@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.mark.cheng.entity.SysFile;
+import com.mark.cheng.enums.ApiResultStatus;
+import com.mark.cheng.exception.BizException;
 import com.mark.cheng.model.R;
 import com.mark.cheng.service.SysFileService;
 import io.swagger.annotations.ApiOperation;
@@ -55,25 +57,34 @@ public class FileController {
      * @return java.lang.String 檔案URL 連結
      **/
     @PostMapping("upload")
-    public String upload(@RequestParam MultipartFile file) {
+    public R upload(@RequestParam MultipartFile file) {
         String originalFileName = file.getOriginalFilename();
         try {
             // 判斷是否為指定的圖檔
             String type = FileUtil.extName(originalFileName);
             List<String> types = Arrays.asList("png", "jpg", "jpeg");
             if (!types.contains(type)) {
-                return "only png or jpg";
+                return R.failed(ApiResultStatus.UNSUPPORTED_TYPE);
             }
 
             // 取得md5做校驗
             String md5 = DigestUtils.md5Hex(file.getBytes());
-            System.out.println("md5 = " + md5);
+            log.info("md5:{}", md5);
 
-            // 檢查DB中是否有相同檔案
+            // 檢查是否有相同檔案
             SysFile fileByMd5 = fileService.getFileByMd5(md5);
             if (fileByMd5 != null) {
-                // 若找到相同檔案則直接返回之前存的記錄
-                return fileByMd5.getUrl();
+                Boolean isDelete = fileByMd5.getIsDelete();
+                Boolean isEnable = fileByMd5.getIsEnable();
+                if (isDelete || !isEnable) {
+                    // 如果是刪除的狀態 或是 未啟用的狀態 則更新成未刪除和已啟用
+                    fileByMd5.setIsDelete(false);
+                    fileByMd5.setIsEnable(true);
+                    fileService.updateById(fileByMd5);
+                }
+
+                // 若找到相同檔案且未刪除則直接返回之前存的記錄
+                return R.success(fileByMd5.getUrl());
             } else {
                 long size = file.getSize();
                 log.info("size:{}, type:{}", size, type);
@@ -96,13 +107,12 @@ public class FileController {
                 saveFile.setUrl(url);
                 saveFile.setMd5(md5);
                 fileService.save(saveFile);
-                return url;
+                return R.success(url);
             }
 
         } catch (IOException e) {
-            String msg = e.getMessage();
-            log.error("ERR:{}", msg, e);
-            return msg;
+            log.error("ERR:{}", e.getMessage(), e);
+            return R.failed(BizException.create(ApiResultStatus.SYSTEM_ERROR));
         }
     }
 
@@ -127,7 +137,7 @@ public class FileController {
 
     @PostMapping("update")
     public R update(@RequestBody SysFile file) {
-        log.info("-=--------------:{}",file);
+        log.info("-=--------------:{}", file);
         return R.success(fileService.updateById(file));
     }
 
