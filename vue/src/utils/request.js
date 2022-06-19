@@ -14,7 +14,7 @@ request.interceptors.request.use(config => {
     console.log('user: ' + user)
     if (user) {
         user = JSON.parse(user);
-        console.log('sss', user)
+        console.log('request util [user]:', user)
         config.headers['token'] = user.token;  // setting header
     }
     return config
