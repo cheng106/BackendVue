@@ -12,7 +12,7 @@
       </el-upload>
 
       <el-form-item label="帳號">
-        <el-input v-model="form.username" autocomplete="off"></el-input>
+        <el-input v-model="form.username" disabled autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="暱稱">
         <el-input v-model="form.nickname" autocomplete="off"></el-input>
@@ -59,6 +59,14 @@ export default {
 
               // 觸發父級更新User的方法
               this.$emit("refreshUser")
+
+              // 更新使用者狀態的localStorage
+              let user = {}
+              await this.getUser().then(res => {
+                user = res.data;
+              })
+              user.token = JSON.parse(localStorage.getItem('sysUser')).token
+              localStorage.setItem('sysUser', JSON.stringify(user));
 
             } else {
               this.$message.error('save error')
