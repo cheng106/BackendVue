@@ -56,12 +56,10 @@ export default {
             console.log('======== save sysUser:', res)
             if (res) {
               this.$message.success('save success')
-              let user = {}
-              await this.getUser().then(res => {
-                user = res.data;
-              })
-              user.token = JSON.parse(localStorage.getItem('sysUser')).token
-              localStorage.setItem('sysUser', JSON.stringify(user));
+
+              // 觸發父級更新User的方法
+              this.$emit("refreshUser")
+
             } else {
               this.$message.error('save error')
             }

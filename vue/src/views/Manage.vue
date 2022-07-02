@@ -6,12 +6,12 @@
 
     <el-container>
       <el-header style="border-bottom: 1px solid #ccc;">
-        <Header :collapseBtnClass="collapseBtnClass" :collapse="collapse"/>
+        <Header :collapseBtnClass="collapseBtnClass" :collapse="collapse" :sysUser="sysUser"/>
       </el-header>
 
       <el-main>
         <!-- 表示該頁的子路由，會在router-view中顯示 -->
-        <router-view/>
+        <router-view @refreshUser="getUser"/>
       </el-main>
     </el-container>
   </el-container>
@@ -31,11 +31,16 @@ export default {
       isCollapse: false,
       sideWidth: '200px',
       logoTextShow: true,
+      sysUser: {}
     }
   },
   components: {
     Header,
     Aside
+  },
+  created() {
+    // 從後端取最新的user資料
+    this.getUser()
   },
   methods: {
     // 點收縮按鈕觸發
@@ -51,6 +56,16 @@ export default {
         this.logoTextShow = true
       }
     },
+    getUser() {
+      let username = localStorage.getItem('sysUser') ?
+          JSON.parse(localStorage.getItem('sysUser')).username : ""
+      // 從後端取user資料
+      this.request.get('/sysUser/username/' + username)
+          .then((user) => {
+            // 重新賦值
+            this.sysUser = user.data
+          })
+    }
   }
 }
 </script>

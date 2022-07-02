@@ -4,8 +4,10 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.mark.cheng.controller.dto.UserDto;
 import com.mark.cheng.entity.SysUser;
@@ -97,8 +99,8 @@ public class UserController {
     @GetMapping("username/{name}")
     @ApiOperation("取得使用者訊息")
     public R delete(@PathVariable String name) {
-        LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<SysUser>()
-                .eq(SysUser::getUsername, name);
+        LambdaQueryWrapper<SysUser> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(SysUser::getUsername, name);
         return R.success(userService.getOne(wrapper));
     }
 
@@ -115,7 +117,7 @@ public class UserController {
                                    @RequestParam String nickname,
                                    @RequestParam String email) {
         IPage<SysUser> page = new Page<>(pageNum, pageSize);
-        LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<SysUser>()
+        Wrapper<SysUser> wrapper = new LambdaQueryWrapper<SysUser>()
                 .like(SysUser::getUsername, username)
                 .like(SysUser::getNickname, nickname)
                 .like(SysUser::getEmail, email)

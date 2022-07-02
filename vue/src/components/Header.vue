@@ -31,16 +31,12 @@ export default {
   props: {
     collapseBtnClass: String,
     collapse: Function,
+    sysUser: Object
   },
   computed: {
     currentPathName() {
       // 需要監聽的資料
       return this.$store.state.currentPathName;
-    }
-  },
-  data() {
-    return {
-      sysUser: localStorage.getItem('sysUser') ? JSON.parse(localStorage.getItem('sysUser')) : {}
     }
   },
   methods: {
