@@ -1,11 +1,46 @@
 <template>
   <div>
+    <el-row :gutter="10" style="margin-bottom: 100px">
+      <el-col :span="6">
+        <el-card style="color:#409EFF">
+          <div><i class="el-icon-user-solid"/> 會員數量</div>
+          <div style="padding:10px 0;text-align: center;font-weight: bold">
+            1,012
+            <!--            <el-tag type="primary" style="font-size: large">100</el-tag>-->
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="6">
+        <el-card style="color:#F56C6C">
+          <div><i class="el-icon-money"/> 銷售總數</div>
+          <div style="padding:10px 0;text-align: center;font-weight: bold">
+            $ 11,200,000
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="6">
+        <el-card style="color:#67C23A">
+          <div><i class="el-icon-bank-card"/> 收益額</div>
+          <div style="padding:10px 0;text-align: center;font-weight: bold">
+            $ 912,384,542
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="6">
+        <el-card style="color:#c7792a">
+          <div><i class="el-icon-s-shop"/> 店面總數</div>
+          <div style="padding:10px 0;text-align: center;font-weight: bold">
+            10
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
     <el-row>
       <el-col :span="12">
-        <div id="main" style="width: 500px; height: 400px;"></div>
+        <div id="main" style="width: 100%; height: 500px;"></div>
       </el-col>
       <el-col :span="12">
-        <div id="pie" style="width: 500px; height: 400px;"></div>
+        <div id="pie" style="width: 100%; height: 500px;"></div>
       </el-col>
     </el-row>
 
@@ -31,6 +66,19 @@ export default {
         subtext: '趨勢圖',
         left: 'center'
       },
+      tooltip: {
+        trigger: 'item'
+      },
+      legend: {
+        orient: 'horizontal',
+        // left: 'left',
+        x: 'top', // 'center' | 'left' | {number},
+        y: 'bottom',
+        borderWidth: 2,
+        padding: 10,
+        itemGap: 10,
+        textStyle: {color: '#409EFF'},
+      },
       xAxis: {
         type: 'category',
         data: ['第一季', '第二季', '第三季', '第四季']
@@ -40,12 +88,24 @@ export default {
       },
       series: [
         {
+          name: '會員數量',
           data: [],
           type: 'line'
         },
         {
+          name: '會員數量',
           data: [],
           type: 'bar'
+        },
+        {
+          name: 'test',
+          data: [],
+          type: 'bar'
+        },
+        {
+          name: 'test',
+          data: [],
+          type: 'line'
         }
       ]
     };
@@ -66,6 +126,7 @@ export default {
       },
       series: [
         {
+          name: "會員數量",
           type: 'pie',
           radius: '70%',
           label: { // 圓餅圖的文字標籤
@@ -106,6 +167,8 @@ export default {
       // option.xAxis.data = res.data.x
       option.series[0].data = res.data
       option.series[1].data = res.data
+      option.series[2].data = [5, 6, 62, 8]
+      option.series[3].data = [5, 6, 62, 8]
 
       pieOption.series[0].data = [
         {name: '第一季', value: res.data[0]},
