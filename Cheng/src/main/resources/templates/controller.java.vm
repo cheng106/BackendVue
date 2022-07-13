@@ -2,6 +2,7 @@ package ${package.Controller};
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.mark.cheng.model.R;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.extern.slf4j.Slf4j;
@@ -44,41 +45,43 @@ public class ${table.controllerName} extends ${superControllerClass} {
 public class ${table.controllerName} {
 #end
 
-        @Autowired
-        private ${entity}Service ${table.entityPath}Service;
+    @Autowired
+    private ${entity}Service ${table.entityPath}Service;
 
-        @PostMapping
-        public Boolean save(@RequestBody ${entity} ${table.entityPath}) {
-            return ${table.entityPath}Service.saveOrUpdate(${table.entityPath});
-        }
+    @PostMapping
+    public R save(@RequestBody ${entity} ${table.entityPath}) {
+        return R.success(${table.entityPath}Service.saveOrUpdate(${table.entityPath}));
+    }
 
-        @DeleteMapping("/{id}")
-        public Boolean delete(@PathVariable Integer id) {
-            return ${table.entityPath}Service.removeById(id);
-        }
+    @DeleteMapping("/{id}")
+    public R delete(@PathVariable Integer id) {
+        return R.success(${table.entityPath}Service.removeById(id));
+    }
 
-        @PostMapping("/del/batch")
-        public boolean deleteBatch(@RequestBody List<Integer> ids) {
-            return ${table.entityPath}Service.removeByIds(ids);
-        }
+    @PostMapping("/del/batch")
+    public boolean deleteBatch(@RequestBody List<Integer> ids) {
+        return ${table.entityPath}Service.removeByIds(ids);
+    }
 
-        @GetMapping
-        public List<${entity}> findAll() {
-            return ${table.entityPath}Service.list();
-        }
+    @GetMapping
+    public List<${entity}> findAll() {
+        return ${table.entityPath}Service.list();
+    }
 
-        @GetMapping("/{id}")
-        public ${entity} findOne(@PathVariable Integer id) {
-            return ${table.entityPath}Service.getById(id);
-        }
+    @GetMapping("/{id}")
+    public ${entity} findOne(@PathVariable Integer id) {
+        return ${table.entityPath}Service.getById(id);
+    }
 
-        @GetMapping("/page")
-        public Page<${entity}> findPage(@RequestParam Integer pageNum,
-        @RequestParam Integer pageSize) {
-            LambdaQueryWrapper<${entity}> wrapper = new LambdaQueryWrapper<>();
-
-            return ${table.entityPath}Service.page(new Page<>(pageNum, pageSize));
-        }
+    @GetMapping("/page")
+    public R findPage(
+            @RequestParam Integer pageNum,
+            @RequestParam Integer pageSize) {
+        LambdaQueryWrapper<${entity}> wrapper = new LambdaQueryWrapper<>();
+        // TODO: sql where condition
+        Page<${entity}> page = ${table.entityPath}Service.page(new Page<>(pageNum, pageSize), wrapper);
+        return R.success(page);
+    }
 
 }
 #end

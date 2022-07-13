@@ -38,7 +38,7 @@ import java.util.List;
 @RestController
 @Api("使用者功能")
 @RequestMapping("sysUser")
-public class UserController {
+public class SysUserController {
 
     @Autowired
     private UserService userService;
