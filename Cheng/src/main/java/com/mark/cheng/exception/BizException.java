@@ -20,11 +20,11 @@ public class BizException extends RuntimeException {
     }
 
     public static BizException error(String msg) {
-        return new BizException(ApiResultStatus.ERROR.getCode(), msg);
+        return new BizException(ApiResultStatus.ERROR.getCode(), String.format(ApiResultStatus.ERROR.getMsg(), msg));
     }
 
     public static BizException error(Throwable throwable, String msg) {
-        return new BizException(throwable, ApiResultStatus.ERROR.getCode(), msg);
+        return new BizException(throwable, ApiResultStatus.ERROR.getCode(), String.format(ApiResultStatus.ERROR.getMsg(), msg));
     }
 
     public static BizException error(Throwable throwable, ApiResultStatus status) {
