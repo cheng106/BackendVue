@@ -55,7 +55,7 @@ public class GeneratorCode {
 
         /* =====資料庫表格 資訊===== */
         // 設定要產生的表格名稱
-        List<String> tableNames = Arrays.asList("sys_file");
+        List<String> tableNames = Arrays.asList("sys_menu");
         // 設定要過濾的表格名稱的前綴字
         List<String> tablePrefixNames = Arrays.asList("");
         /* =====資料庫表格 資訊===== */

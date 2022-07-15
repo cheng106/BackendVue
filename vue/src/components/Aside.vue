@@ -29,6 +29,14 @@
         <i class="el-icon-s-custom"></i>
         <span slot="title">使用者管理</span>
       </el-menu-item>
+      <el-menu-item index="/role">
+        <i class="el-icon-s-custom"></i>
+        <span slot="title">角色管理</span>
+      </el-menu-item>
+      <el-menu-item index="/menu">
+        <i class="el-icon-s-custom"></i>
+        <span slot="title">選單管理</span>
+      </el-menu-item>
       <el-menu-item index="/file">
         <i class="el-icon-document"></i>
         <span slot="title">檔案管理</span>
