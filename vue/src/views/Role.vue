@@ -87,10 +87,9 @@
     <el-dialog title="設定選單" :visible.sync="menuDialogVisible" width="50%" style="padding: 0 50px">
       <el-tree
           :data="menuData"
+          :props="props"
           show-checkbox
           node-key="id"
-          :default-expanded-keys="[1, 4]"
-          :default-checked-keys="[3]"
           @check-change="handleCheckChange">
       </el-tree>
       <div slot="footer" class="dialog-footer">
@@ -116,35 +115,10 @@ export default {
       menuDialogVisible: false,
       form: {},
       multipleSelection: [],
-      menuData: [
-        {
-          id: 1,
-          label: '首頁',
-          children: []
-        },
-        {
-          id: 2,
-          label: '系統管理',
-          children: [
-            {
-              id: 3,
-              label: '使用者管理'
-            },
-            {
-              id: 4,
-              label: '角色管理'
-            },
-            {
-              id: 5,
-              label: '選單管理'
-            },
-            {
-              id: 6,
-              label: '檔案管理'
-            },
-          ]
-        },
-      ],
+      menuData: [],
+      props: {
+        label: 'name',
+      },
       headerBg: 'headerBg'
     }
   },
@@ -234,6 +208,18 @@ export default {
     // Role Function
     selectMenu(roleId) {
       this.menuDialogVisible = true;
+
+      // 請求選單資料
+      this.request.get("/sysMenu", {
+        params: {
+          name: ""
+        }
+      }).then(res => {
+        console.log(res)
+        if (res.code === 200) {
+          this.menuData = res.data;
+        }
+      })
     },
     handleCheckChange(data, checked, indeterminate) {
       console.log(data, checked, indeterminate);
