@@ -37,11 +37,16 @@
       <el-table-column prop="id" label="ID" width="80" align="center"></el-table-column>
       <el-table-column prop="name" label="名稱" align="center"></el-table-column>
       <el-table-column prop="path" label="路徑" align="center"></el-table-column>
-      <el-table-column prop="icon" label="圖案" align="center"></el-table-column>
+      <el-table-column label="圖案" align="center">
+        <template slot-scope="scope">
+          <span :class="scope.row.icon" style="font-size: 20px"/>
+        </template>
+      </el-table-column>
       <el-table-column prop="description" label="描述" align="center"></el-table-column>
       <el-table-column label="功能" width="350" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" @click="handleAdd(scope.row.id)" v-if="!scope.row.pid && !scope.row.path">新增子選單 <i class="el-icon-plus"></i></el-button>
+          <el-button type="primary" @click="handleAdd(scope.row.id)" v-if="!scope.row.pid && !scope.row.path">新增子選單 <i
+              class="el-icon-plus"></i></el-button>
           <el-button type="success" @click="handleEdit(scope.row)">編輯 <i class="el-icon-edit"></i></el-button>
 
           <el-popconfirm
@@ -68,7 +73,11 @@
           <el-input v-model="form.path" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="圖案">
-          <el-input v-model="form.icon" autocomplete="off"></el-input>
+          <el-select clearable v-model="form.icon" placeholder="請選擇" style="width: 100%;">
+            <el-option v-for="item in options" :key="item.name" :label="item.name" :value="item.value">
+              <i :class="item.value"/> {{ item.name }}
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="描述">
           <el-input v-model="form.description" autocomplete="off"></el-input>
@@ -96,6 +105,7 @@ export default {
       dialogFormVisible: false,
       form: {},
       multipleSelection: [],
+      options: [],
       headerBg: 'headerBg'
     }
   },
@@ -150,6 +160,12 @@ export default {
       console.log('row:', row)
       this.form = row;
       this.dialogFormVisible = true;
+      // 請求圖案icon資料
+      this.request.get("/sysMenu/icons").then(res => {
+        if (res.code === 200) {
+          this.options = res.data
+        }
+      })
     },
     handleDelete(id) {
       this.request.delete("/sysMenu/" + id).then(res => {
