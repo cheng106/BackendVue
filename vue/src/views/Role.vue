@@ -90,7 +90,12 @@
           :props="props"
           show-checkbox
           node-key="id"
+          :default-expanded-keys="expends"
+          :default-checked-keys="checkes"
           @check-change="handleCheckChange">
+         <span class="custom-tree-node" slot-scope="{ node, data }">
+            <span><i :class="data.icon"/>{{ data.name }}</span>
+         </span>
       </el-tree>
       <div slot="footer" class="dialog-footer">
         <el-button @click="menuDialogVisible = false">取 消</el-button>
@@ -119,6 +124,8 @@ export default {
       props: {
         label: 'name',
       },
+      expends: [],
+      checks: [],
       headerBg: 'headerBg'
     }
   },
@@ -218,6 +225,8 @@ export default {
         console.log(res)
         if (res.code === 200) {
           this.menuData = res.data;
+          // 把id放到展開的陣列
+          this.expends = this.menuData.map(v => v.id)
         }
       })
     },
