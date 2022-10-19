@@ -1,6 +1,9 @@
 package com.mark.cheng.controller.dto;
 
+import com.mark.cheng.entity.SysMenu;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * @author cheng
@@ -13,4 +16,6 @@ public class UserDto {
     private String nickname;
     private String avatar;
     private String token;
+    private String role;
+    private List<SysMenu> menus;
 }

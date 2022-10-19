@@ -48,6 +48,7 @@ export default {
           this.request.post("/sysUser/login", this.sysUser).then(res => {
             if (res.code === 200) {
               localStorage.setItem('sysUser', JSON.stringify(res.data))
+              localStorage.setItem('menus', JSON.stringify(res.data.menus))
               this.$router.push("/")
             } else {
               this.$message.error(res.msg)

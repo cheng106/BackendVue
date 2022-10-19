@@ -1,22 +1,17 @@
 package com.mark.cheng.controller;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.mark.cheng.common.Constants;
 import com.mark.cheng.entity.SysDict;
-import com.mark.cheng.entity.SysRole;
 import com.mark.cheng.model.R;
 import com.mark.cheng.service.SysDictService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.extern.slf4j.Slf4j;
 
-import java.awt.*;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import com.mark.cheng.service.SysMenuService;
 import com.mark.cheng.entity.SysMenu;
@@ -55,26 +50,7 @@ public class SysMenuController {
 
     @GetMapping
     public R findAll(@RequestParam(defaultValue = "") String name) {
-        // 查資料
-        LambdaQueryWrapper<SysMenu> wrapper = new LambdaQueryWrapper<>();
-        wrapper.like(SysMenu::getName, name);
-        List<SysMenu> menuList = sysMenuService.list(wrapper);
-
-        // 找出第一層選單(pid == null)
-        List<SysMenu> parentMenu = menuList.stream()
-                .filter(m -> m.getPid() == null)
-                .collect(Collectors.toList());
-
-        // 找出子選單
-        parentMenu.forEach(menu -> {
-            List<SysMenu> childrenList = menuList.stream()
-                    // 篩選所有資料中pid為父級id的資料就是第二層選單
-                    .filter(m -> Objects.equals(menu.getId(), m.getPid()))
-                    .collect(Collectors.toList());
-            menu.setChildren(childrenList);
-        });
-
-        return R.success(parentMenu);
+        return R.success(sysMenuService.findMenus(name));
     }
 
     @GetMapping("/{id}")

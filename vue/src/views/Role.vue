@@ -36,6 +36,7 @@
       <el-table-column type="selection" width="50"></el-table-column>
       <el-table-column prop="id" label="ID" width="80" align="center"></el-table-column>
       <el-table-column prop="name" label="名稱" align="center"></el-table-column>
+      <el-table-column prop="roleCode" label="角色代號" align="center"></el-table-column>
       <el-table-column prop="description" label="描述" align="center"></el-table-column>
       <el-table-column label="功能" width="280" align="center">
         <template slot-scope="scope">
@@ -74,6 +75,9 @@
         <el-form-item label="名稱">
           <el-input v-model="form.name" autocomplete="off"></el-input>
         </el-form-item>
+        <el-form-item label="角色代號">
+          <el-input v-model="form.roleCode" autocomplete="off"></el-input>
+        </el-form-item>
         <el-form-item label="描述">
           <el-input v-model="form.description" autocomplete="off"></el-input>
         </el-form-item>
@@ -90,16 +94,16 @@
           :props="props"
           show-checkbox
           node-key="id"
+          ref="tree"
           :default-expanded-keys="expends"
-          :default-checked-keys="checkes"
-          @check-change="handleCheckChange">
+          :default-checked-keys="checks">
          <span class="custom-tree-node" slot-scope="{ node, data }">
             <span><i :class="data.icon"/>{{ data.name }}</span>
          </span>
       </el-tree>
       <div slot="footer" class="dialog-footer">
         <el-button @click="menuDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="save">確 定</el-button>
+        <el-button type="primary" @click="saveRoleMenu">確 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -126,6 +130,7 @@ export default {
       },
       expends: [],
       checks: [],
+      roleId: 0,
       headerBg: 'headerBg'
     }
   },
@@ -175,6 +180,20 @@ export default {
             }
           })
     },
+    saveRoleMenu() {
+      // console.log('nodes:', this.$refs.tree.getCheckedNodes());
+      // console.log('keys:', this.$refs.tree.getCheckedKeys());
+      this.request.post("/sysRole/roleMenu/" + this.roleId, this.$refs.tree.getCheckedKeys())
+          .then(res => {
+            console.log(res)
+            if (res.code === 200) {
+              this.$message.success("綁定成功")
+              this.menuDialogVisible = false
+            } else {
+              this.$message.error("綁定失敗")
+            }
+          })
+    },
     handleEdit(row) {
       console.log('row:', row)
       this.form = row;
@@ -215,6 +234,7 @@ export default {
     // Role Function
     selectMenu(roleId) {
       this.menuDialogVisible = true;
+      this.roleId = roleId;
 
       // 請求選單資料
       this.request.get("/sysMenu", {
@@ -229,9 +249,12 @@ export default {
           this.expends = this.menuData.map(v => v.id)
         }
       })
-    },
-    handleCheckChange(data, checked, indeterminate) {
-      console.log(data, checked, indeterminate);
+
+      // get menu id list
+      this.request.get("/sysRole/roleMenu/" + roleId)
+          .then(res => {
+            this.checks = res.data
+          })
     },
     reset() {
       this.name = '';

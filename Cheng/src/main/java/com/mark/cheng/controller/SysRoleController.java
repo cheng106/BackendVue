@@ -43,8 +43,8 @@ public class SysRoleController {
     }
 
     @GetMapping
-    public List<SysRole> findAll() {
-        return sysRoleService.list();
+    public R findAll() {
+        return R.success(sysRoleService.list());
     }
 
     @GetMapping("/{id}")
@@ -63,4 +63,21 @@ public class SysRoleController {
         return R.success(page);
     }
 
+    /**
+     * 綁定角色和選單的關係
+     *
+     * @param roleId  角色id
+     * @param menuIds 選單的id list
+     * @return com.mark.cheng.model.R
+     **/
+    @PostMapping("/roleMenu/{roleId}")
+    public R saveRoleMenu(@PathVariable Integer roleId, @RequestBody List<Integer> menuIds) {
+        sysRoleService.setRoleMenu(roleId, menuIds);
+        return R.success();
+    }
+
+    @GetMapping("/roleMenu/{roleId}")
+    public R getRoleMenu(@PathVariable Integer roleId) {
+        return R.success(sysRoleService.getRoleMenu(roleId));
+    }
 }

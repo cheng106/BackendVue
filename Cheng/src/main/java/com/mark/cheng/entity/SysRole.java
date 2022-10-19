@@ -26,9 +26,14 @@ public class SysRole implements Serializable {
     @TableId(value = "ID", type = IdType.AUTO)
     private Integer id;
 
+    @ApiModelProperty("角色名稱")
     private String name;
 
+    @ApiModelProperty("角色描述")
     private String description;
+
+    @ApiModelProperty("辨別角色:ROLE_***")
+    private String roleCode;
 
 
 }
